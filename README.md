@@ -52,15 +52,6 @@ SITES=site1,site2
 ```
 
 ```sh
-# # Preinstall project dependencies
-# $ sudo ./bin/preinstall_yq.sh
-# # Preinstall Ansible dependencies on Control Node (host machine)
-# $ ./bin/preinstall_ansible.sh
-# $ ./bin/ansible.sh preinstall
-# # Install Docker on quest
-# $ ./bin/ansible_playbook.sh
-# $ ./bin/ansible.sh playbook
-
 # Examine config
 $ ./bin/compose.sh config
 
@@ -101,7 +92,6 @@ $ ./bin/backup_single_site.sh -s jakabszallas
 
 # Restore single website
 $ ./bin/restore_single_site.sh -s jakabszallas -l /mnt/e/[filepath]/backup_[filename].tar.gz
-$ ./bin/restore_single_site.sh -s jakabszallas -l /mnt/e/HONLAPOK/JAKABSZALLAS.HU/WEBLAP_2023/BACKUPS_LARADOCK/backup_jakabszallas_1696451407_20231004_223007.tar.gz
 
 # WP CLI usage
 # https://make.wordpress.org/cli/handbook/guides/running-commands-remotely/
