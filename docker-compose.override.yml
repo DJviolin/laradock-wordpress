@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+
+### PHP-FPM ##############################################
+    php-fpm:
+      volumes:
+        - '${PHP_FPM_CUSTOM_INI}:/usr/local/etc/php/conf.d/custom.ini:ro'
+        - '${PHP_FPM_CUSTOM_ENTRYPOINT}:/opt/startup.override.sh:ro'
+      environment:
+        - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}
+        - WEBSERVER=${WEBSERVER}
+      command: ["/bin/sh", "/opt/startup.override.sh"]
+
+### NGINX Server #########################################
+    nginx:
+      volumes:
+        - '${NGINX_GLOBAL_PATH}:/etc/nginx/global'
+        - '${NGINX_TEMPLATES_PATH}:/etc/nginx/templates'
+        - '${NGINX_CUSTOM_ENTRYPOINT}:/opt/startup.override.sh:ro'
+      environment:
+        - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}${NGINX_APP_CODE_SUBFOLDER}
+        - WEBSITE_DOMAIN=${WEBSITE_DOMAIN}
+      networks:
+        backend:
+          aliases:
+            - ${WEBSITE_DOMAIN}
+      command: ["/bin/sh", "/opt/startup.override.sh"]
+
+### Apache Server ########################################
+    apache2:
+      volumes:
+        - '${APACHE_CUSTOM_ENTRYPOINT}:/opt/startup.override.sh:ro'
+      environment:
+        - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}
+        - HOSTNAME=${WEBSITE_DOMAIN}
+        - WEB_ALIAS_DOMAIN=*.${WEBSITE_DOMAIN}
+        - PUID=${PHP_FPM_PUID}
+        - PGID=${PHP_FPM_PGID}
+      networks:
+        backend:
+          aliases:
+            - ${WEBSITE_DOMAIN}
+      command: ["/bin/bash", "/opt/startup.override.sh"]
+
+### MariaDB ##############################################
+    mariadb:
+      command: ["mariadbd"]
+
+### Portainer ################################################
+# https://docs.portainer.io/v/ce-2.9/advanced/cli
+# docker exec laradock-portainer-1 /bin/sh -c "/portainer --help"
+    portainer:
+      build:
+        context: ./src/portainer-ce
+      ports:
+        - 9443:9443
+      command: [
+        "--host", "unix:///var/run/docker.sock",
+        "--edge-compute",
+        "--http-disabled",
+        "--admin-password", "${PORTAINER_ADMIN_PASSWORD_HASH}"
+      ]
+      profiles:
+        - donotstart
+
+### Selenium ###############################################
+# https://www.selenium.dev/documentation/
+# https://www.tutorialspoint.com/selenium/selenium_webdriver.htm
+# https://www.npmjs.com/package/selenium-webdriver
+# https://www.npmjs.com/package/webdriver
+# https://www.npmjs.com/package/nightwatch
+# Open your browser and visit the localhost on port 4444 at the following URL: http://localhost:4444/wd/hub
+
+### Logstash ##############################################
+# Explanation: unfortunately, the original pull request for Logstash included the entire environment file within it's configuration. So to use our project structure (where we keeping Laradock's repo untouched, because of the frequent updates), we need to "monkey patch" Laradock's `./laradock/docker-compose.yml` with the following:
+    # logstash:
+    #   env_file: []

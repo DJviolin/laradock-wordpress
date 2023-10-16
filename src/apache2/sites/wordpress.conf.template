@@ -1,0 +1,36 @@
+# https://github.com/laradock/laradock/blob/master/docker-compose.yml
+# https://github.com/laradock/laradock/blob/master/apache2/Dockerfile
+# https://github.com/webdevops/Dockerfile/blob/master/docker/apache/ubuntu-18.04/conf/provision/entrypoint.d/20-apache.sh
+
+<VirtualHost *:80>
+    ServerName <SERVERNAME>
+    ServerAlias <ALIAS_DOMAIN>
+
+    RewriteEngine On
+    RewriteCond %{HTTPS} !on
+    RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName <SERVERNAME>
+    ServerAlias <ALIAS_DOMAIN>
+    DocumentRoot <DOCUMENT_ROOT>
+    Options Indexes FollowSymLinks
+
+    SSLEngine on
+    SSLCertificateFile /etc/apache2/ssl/ssl_site.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/ssl_site.key
+
+    <Directory "<DOCUMENT_ROOT>">
+      AllowOverride All
+      <IfVersion < 2.4>
+        Allow from all
+      </IfVersion>
+      <IfVersion >= 2.4>
+        Require all granted
+      </IfVersion>
+    </Directory>
+
+    ErrorLog /var/log/apache2/error.log
+    CustomLog /var/log/apache2/access.log combined
+</VirtualHost>
