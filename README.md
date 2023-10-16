@@ -88,10 +88,10 @@ $ sudo chown -R $(id -u):$(id -u) ~/.laradock/backup
 $ ./bin/compose.sh restore_all
 
 # Backup single website
-$ ./bin/backup_single_site.sh -s jakabszallas
+$ ./bin/backup_single_site.sh -s [sitename]
 
 # Restore single website
-$ ./bin/restore_single_site.sh -s jakabszallas -l /mnt/e/[filepath]/backup_[filename].tar.gz
+$ ./bin/restore_single_site.sh -s [sitename] -l /mnt/e/[filepath]/backup_[filename].tar.gz
 
 # WP CLI usage
 # https://make.wordpress.org/cli/handbook/guides/running-commands-remotely/
