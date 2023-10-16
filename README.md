@@ -91,7 +91,7 @@ $ ./bin/compose.sh restore_all
 $ ./bin/backup_single_site.sh -s [sitename]
 
 # Restore single website
-$ ./bin/restore_single_site.sh -s [sitename] -l /mnt/e/[filepath]/backup_[filename].tar.gz
+$ ./bin/restore_single_site.sh -s [sitename] -l /mnt/[filepath]/backup_[filename].tar.gz
 
 # WP CLI usage
 # https://make.wordpress.org/cli/handbook/guides/running-commands-remotely/
