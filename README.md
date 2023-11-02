@@ -88,7 +88,7 @@ $ sudo chown -R $(id -u):$(id -u) ~/.laradock/backup
 $ ./bin/compose.sh restore_all
 
 # Backup single website
-$ ./bin/backup_single_site.sh -s [sitename] -o /mnt/[filepath]
+$ ./bin/backup_single_site.sh -s [sitename]
 
 # Restore single website
 $ ./bin/restore_single_site.sh -s [sitename] -l /mnt/[filepath]/backup_[filename].tar.gz

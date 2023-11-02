@@ -26,9 +26,6 @@ while getopts "h:s:" opt; do
 		s)
 			SITE=$OPTARG
 			;;
-		o)
-			OUTPUT=$OPTARG
-			;;
 	esac
 done
 shift $((OPTIND-1))
@@ -60,4 +57,3 @@ mkdir -p $DATA $SQL
 docker exec $ADM_DEFAULT_SERVER sh -c "mariadb-dump -u$MARIADB_USER -p$MARIADB_PASSWORD --single-transaction --quick --lock-tables=false $SITE" > $SQL/$SITE.sql
 (cd $BAK/$SITE && tar -czf $BAK/backup_${SITE}_${TIMESTAMP}.tar.gz data sql)
 rm -rf $BAK/$SITE
-cp $BAK/backup_${SITE}_${TIMESTAMP}.tar.gz $OUTPUT
